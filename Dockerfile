@@ -19,12 +19,12 @@ WORKDIR /app
 COPY --from=dependencies /app/package*.json ./
 RUN npm install --only=production
 RUN npm install pm2 -g
-COPY --from=build /app/dist ./dist
+COPY --from=build /app ./dist
 
 USER node
 ENV port=8080
 EXPOSE 8080
 
-CMD ["pm2-runtime", "dist/main.js"]
+CMD ["pm2-runtime", "/dist/main.js"]
 
 
