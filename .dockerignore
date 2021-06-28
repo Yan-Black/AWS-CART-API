@@ -1,0 +1,8 @@
+# ignore node_modules directory as it is not required for image build
+/node_modules
+# ignore .git and .cache folders to avoid expose of application source code, passwords, keys and credentials
+.git
+.gitignore
+.cache
+# ignore tests
+/test

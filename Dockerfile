@@ -1,24 +1,25 @@
-FROM node:15.4.0-alpine AS base
+FROM node:12-alpine AS base
 
-WORKDIR app/
+WORKDIR /app
 
 #Dependencies
+FROM base AS dependencies
 COPY package*.json ./
-RUN npm install
+RUN npm install 
 
 #Build
-COPY . .
-RUN npm run Build
+FROM dependencies AS build
+WORKDIR /app
+COPY src /app
+RUN npm run build
 
 #Application
-FROM node:15.4.0-alpine AS application
-
-COPY --from=base /app/package*.json ./
-
+FROM node:12-alpine AS release
+WORKDIR /app
+COPY --from=dependencies /app/package*.json ./
 RUN npm install --only=production
 RUN npm install pm2 -g
-
-COPY --from=base /app/dist ./dist
+COPY --from=build /app ./dist
 
 USER node
 ENV port=8080
